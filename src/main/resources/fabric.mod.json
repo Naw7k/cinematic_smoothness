@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "cinematic_smoothness",
+  "version": "${version}",
+  "name": "Cinematic Smoothness",
+  "description": "A slider to control the smoothness of the cinematic camera, including extra features.",
+  "contact": {
+    "homepage": "https://modrinth.com/mod/cinematic-smoothness",
+    "sources": "https://github.com/Naw7k/cinematic_smoothness",
+    "issues": "https://github.com/Naw7k/cinematic_smoothness/issues"
+  },
+  "license": "MIT",
+  "icon": "assets/cinematic_smoothness/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "net.naw.cinematic_smoothness.client.Cinematic_smoothnessClient"
+    ],
+    "main": [
+      "net.naw.cinematic_smoothness.Cinematic_smoothness"
+    ]
+  },
+  "mixins": [
+    "cinematic_smoothness.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

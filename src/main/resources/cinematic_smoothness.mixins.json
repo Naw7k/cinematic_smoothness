@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.naw.cinematic_smoothness.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "cinematic_smoothness-refmap.json",
+  "mixins": [
+    "MouseHandlerMixin",
+    "InGameHudMixin",
+    "GameRendererMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

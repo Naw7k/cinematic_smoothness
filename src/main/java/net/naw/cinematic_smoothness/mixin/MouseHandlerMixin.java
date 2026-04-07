@@ -39,7 +39,7 @@ public abstract class MouseHandlerMixin {
             // // so the "Ghost" 200% or -70% effect stops immediately.
             double s = Cinematic_smoothness.config.fineControl
                     ? Cinematic_smoothness.config.smoothness
-                    : Math.max(0.0, Math.min(1.0, Cinematic_smoothness.config.smoothness));
+                    : Math.clamp(Cinematic_smoothness.config.smoothness, 0.0, 1.0);
 
             // // Absolute OFF check (using our 'active' s)
             if (s <= -1.05) return originalRawValue;

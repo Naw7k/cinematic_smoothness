@@ -3,6 +3,8 @@ package net.naw.cinematic_smoothness;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileReader;
@@ -10,6 +12,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class ModConfig {
+    private static final Logger LOGGER = LoggerFactory.getLogger("cinematic_smoothness");
+
     // // Core Settings
     public double smoothness = 0.5;
     public boolean showBlackBars = true;
@@ -30,7 +34,7 @@ public class ModConfig {
         try (FileWriter writer = new FileWriter(CONFIG_FILE)) {
             GSON.toJson(this, writer);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to save config", e);
         }
     }
 
@@ -41,7 +45,7 @@ public class ModConfig {
                 if (config == null) return new ModConfig();
                 return config;
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("Failed to load config", e);
             }
         }
         ModConfig config = new ModConfig();

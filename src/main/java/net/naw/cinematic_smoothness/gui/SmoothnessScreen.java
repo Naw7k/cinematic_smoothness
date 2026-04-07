@@ -1,6 +1,6 @@
 package net.naw.cinematic_smoothness.gui;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
@@ -24,11 +24,11 @@ public class SmoothnessScreen extends Screen {
     public boolean isPauseScreen() { return false; }
 
     @Override
-    public void renderBackground(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractBackground(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         if (bgFocusMode == 1) {
-            guiGraphics.fillGradient(0, 0, this.width, this.height, 0x40000000, 0x40000000);
+            graphics.fillGradient(0, 0, this.width, this.height, 0x40000000, 0x40000000);
         } else if (bgFocusMode == 2) {
-            this.renderTransparentBackground(guiGraphics);
+            this.extractTransparentBackground(graphics);
         }
     }
 
@@ -144,8 +144,8 @@ public class SmoothnessScreen extends Screen {
                 double val = Cinematic_smoothness.config.smoothness;
                 String desc = (val < 0) ? "Sharp, instant camera response (Lower than vanilla)." :
                         (val == 0) ? "Cinematic smoothing is disabled." :
-                                (val > 1.0) ? "Ultra-heavy smoothing for slow, sweeping cinematic pans." :
-                                        "Adjusts how much the camera 'drags' behind your movement.";
+                        (val > 1.0) ? "Ultra-heavy smoothing for slow, sweeping cinematic pans." :
+                        "Adjusts how much the camera 'drags' behind your movement.";
                 this.setTooltip(Tooltip.create(Component.literal(desc)));
             }
 
@@ -186,8 +186,8 @@ public class SmoothnessScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 20, 0xFFFFFF);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        graphics.centeredText(this.font, this.title, this.width / 2, 20, 0xFFFFFF);
 
         if (!this.minecraft.options.smoothCamera) {
             String message;
@@ -197,10 +197,10 @@ public class SmoothnessScreen extends Screen {
                 String keyName = this.minecraft.options.keySmoothCamera.getTranslatedKeyMessage().getString();
                 message = "Cinematic Camera is OFF (Press " + keyName + " to enable)";
             }
-            guiGraphics.drawCenteredString(this.font, message, this.width / 2, this.height / 2 + 85, 0xFFFF5555);
+            graphics.centeredText(this.font, message, this.width / 2, this.height / 2 + 85, 0xFFFF5555);
         }
 
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
     }
 
     @Override

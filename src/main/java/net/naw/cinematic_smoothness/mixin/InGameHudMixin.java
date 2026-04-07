@@ -1,7 +1,7 @@
 package net.naw.cinematic_smoothness.mixin;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.DeltaTracker;
 import net.naw.cinematic_smoothness.Cinematic_smoothness;
@@ -21,35 +21,34 @@ public class InGameHudMixin {
 
     @Unique
     private float barProgress = 0.0f;
-    @Unique
-    private final float slideSpeed = 0.15f;
 
     // // FIXED: Now checks if Smooth Camera (F2) is actually ON before hiding
-    @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true, remap = false)
-    private void onRenderCrosshair(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    @Inject(method = "extractCrosshair", at = @At("HEAD"), cancellable = true, remap = false)
+    private void onRenderCrosshair(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (this.minecraft.options.smoothCamera && Cinematic_smoothness.config.hideCrosshair) {
             ci.cancel();
         }
     }
 
     // // 1. THE "BEHIND" INJECTION (Runs before the Hotbar)
-    @Inject(method = "render", at = @At("HEAD"), remap = false)
-    private void renderBarsBehind(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    @Inject(method = "extractRenderState", at = @At("HEAD"), remap = false)
+    private void renderBarsBehind(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (Cinematic_smoothness.config.showHudWithBars) {
-            drawBars(guiGraphics, deltaTracker);
+            drawBars(graphics, deltaTracker);
         }
     }
 
     // // 2. THE "IN-FRONT" INJECTION (Runs after everything else)
-    @Inject(method = "render", at = @At("TAIL"), remap = false)
-    private void renderBarsInFront(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    @Inject(method = "extractRenderState", at = @At("TAIL"), remap = false)
+    private void renderBarsInFront(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (!Cinematic_smoothness.config.showHudWithBars) {
-            drawBars(guiGraphics, deltaTracker);
+            drawBars(graphics, deltaTracker);
         }
     }
 
     @Unique
-    private void drawBars(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+    private void drawBars(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
+        float slideSpeed = 0.15f;
         boolean shouldShow = this.minecraft.options.smoothCamera && Cinematic_smoothness.config.showBlackBars;
 
         if (shouldShow && barProgress < 1.0f) {
@@ -61,13 +60,13 @@ public class InGameHudMixin {
         }
 
         if (barProgress > 0.0f) {
-            int width = guiGraphics.guiWidth();
-            int height = guiGraphics.guiHeight();
+            int width = graphics.guiWidth();
+            int height = graphics.guiHeight();
             int maxBarHeight = height / 8;
             int currentBarHeight = (int) (maxBarHeight * barProgress);
 
-            guiGraphics.fill(0, 0, width, currentBarHeight, 0xFF000000);
-            guiGraphics.fill(0, height - currentBarHeight, width, height, 0xFF000000);
+            graphics.fill(0, 0, width, currentBarHeight, 0xFF000000);
+            graphics.fill(0, height - currentBarHeight, width, height, 0xFF000000);
         }
     }
 }
